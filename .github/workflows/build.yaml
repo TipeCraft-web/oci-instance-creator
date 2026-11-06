@@ -36,5 +36,6 @@ jobs:
           INSTANCE_SHAPE: ${{ secrets.INSTANCE_SHAPE }}
           INSTANCE_OCPUS: ${{ secrets.INSTANCE_OCPUS }}
           INSTANCE_MEMORY_IN_GBS: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           go run .
