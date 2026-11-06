@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - '*'
+  workflow_dispatch:
     tags:
       - '*'
   pull_request:
