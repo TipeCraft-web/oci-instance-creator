@@ -27,6 +27,7 @@ type Configuration struct {
 	// Oracle Cloud / User Configuration
 	UserId      string `mapstructure:"oci_user_id"`     // required
 	TenancyId   string `mapstructure:"oci_tenancy_id"`  // required
+	CompartmentId string `mapstructure:"oci_compartment_id"`
 	SubnetId    string `mapstructure:"oci_subnet_id"`   // required
 	ImageId     string `mapstructure:"oci_image_id"`    // required
 	Fingerprint string `mapstructure:"oci_fingerprint"` // required
@@ -61,6 +62,7 @@ func (s *Configuration) Read() error {
 	viper.SetDefault("volume_size", 100)
 	viper.SetDefault("create_interval_seconds", 240)
 	viper.SetDefault("create_zone_seconds", 30)
+    viper.SetDefault("oci_compartment_id", viper.GetString("oci_tenancy_id"))
 	viper.SetDefault("log_level", "INFO")
 
 	if err := viper.ReadInConfig(); err != nil {
