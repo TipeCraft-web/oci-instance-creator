@@ -58,9 +58,9 @@ func (s *Configuration) Read() error {
 	viper.SetDefault("shape", "VM.Standard.A1.Flex")
 	viper.SetDefault("display_name", strconv.FormatInt(time.Now().UnixMilli(), 10))
 	viper.SetDefault("cpus", 4)
-	viper.SetDefault("volume_size", 50)
-	viper.SetDefault("create_interval_seconds", 60)
-	viper.SetDefault("create_zone_seconds", 10)
+	viper.SetDefault("volume_size", 100)
+	viper.SetDefault("create_interval_seconds", 240)
+	viper.SetDefault("create_zone_seconds", 30)
 	viper.SetDefault("log_level", "INFO")
 
 	if err := viper.ReadInConfig(); err != nil {
