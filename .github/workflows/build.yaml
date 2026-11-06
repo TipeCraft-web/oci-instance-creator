@@ -21,8 +21,8 @@ jobs:
 
       - name: Create Private Key File
         run: |
-          echo "${{ secrets.OCI_KEY_CONTENT }}" > oci_private_key.pem
-          chmod 600 oci_private_key.pem
+          echo "${{ secrets.OCI_KEY_CONTENT }}" > oci.key
+          chmod 600 oci.key
 
       - name: Run Bot
         env:
@@ -32,7 +32,7 @@ jobs:
           OCI_IMAGE_ID: ${{ secrets.OCI_IMAGE_ID }}
           OCI_REGION: ${{ secrets.OCI_REGION }}
           OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
-          OCI_KEY_PATH: ./oci_private_key.pem
+          OCI_KEY_PATH: ./oci.key
           INSTANCE_SHAPE: ${{ secrets.INSTANCE_SHAPE }}
           INSTANCE_OCPUS: ${{ secrets.INSTANCE_OCPUS }}
           INSTANCE_MEMORY_IN_GBS: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
