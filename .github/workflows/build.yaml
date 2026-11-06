@@ -1,31 +1,38 @@
-name: Deploy OCI Instance Creator to Docker
+name: Run OCI Instance Creator
+
 on:
   push:
-    branches:
-      - '*'
-  workflow_dispatch:
-    tags:
-      - '*'
-  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '*/30 * * * *' # Läuft vollautomatisch alle 30 Minuten im Hintergrund
+  workflow_dispatch: # Aktiviert den manuellen Start-Button
+
 jobs:
-  dist:
-    name: Deploy to Container Registry
+  run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to Container Registry
-        uses: docker/login-action@v1
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and push image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: mowirth/${{ github.event.repository.name }}:latest
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install oci
+
+      - name: Run Bot
+        env:
+          OCI_USER_ID: ${{ secrets.OCI_USER_ID }}
+          OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_REGION: ${{ secrets.OCI_REGION }}
+          OCI_KEY_CONTENT: ${{ secrets.OCI_KEY_CONTENT }}
+          OCI_SUBNET_ID: ${{ secrets.OCI_SUBNET_ID }}
+          INSTANCE_SHAPE: ${{ secrets.INSTANCE_SHAPE }}
+          INSTANCE_OCPUS: ${{ secrets.INSTANCE_OCPUS }}
+          INSTANCE_MEMORY_IN_GBS: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
+        run: |
+          python main.py || python run.py
