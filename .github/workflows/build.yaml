@@ -2,9 +2,9 @@ name: Run OCI Instance Creator
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   schedule:
-    - cron: '*/30 * * * *' # Läuft vollautomatisch alle 30 Minuten im Hintergrund
+    - cron: '*/30 * * * *' # Läuft alle 30 Minuten automatisch
   workflow_dispatch: # Aktiviert den manuellen Start-Button
 
 jobs:
@@ -14,25 +14,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          python-version: '3.10'
+          go-version: '1.21'
 
-      - name: Install Dependencies
+      - name: Create Private Key File
         run: |
-          pip install oci
+          echo "${{ secrets.OCI_KEY_CONTENT }}" > oci_private_key.pem
+          chmod 600 oci_private_key.pem
 
       - name: Run Bot
         env:
-          OCI_USER_ID: ${{ secrets.OCI_USER_ID }}
-          OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
-          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
-          OCI_REGION: ${{ secrets.OCI_REGION }}
-          OCI_KEY_CONTENT: ${{ secrets.OCI_KEY_CONTENT }}
-          OCI_SUBNET_ID: ${{ secrets.OCI_SUBNET_ID }}
-          INSTANCE_SHAPE: ${{ secrets.INSTANCE_SHAPE }}
-          INSTANCE_OCPUS: ${{ secrets.INSTANCE_OCPUS }}
-          INSTANCE_MEMORY_IN_GBS: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
+          USER: ${{ secrets.OCI_USER_ID }}
+          TENANCY: ${{ secrets.OCI_TENANCY_ID }}
+          SUBNET: ${{ secrets.OCI_SUBNET_ID }}
+          REGION: ${{ secrets.OCI_REGION }}
+          FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          KEY_PATH: ./oci_private_key.pem
+          SHAPE: ${{ secrets.INSTANCE_SHAPE }}
+          CPUS: ${{ secrets.INSTANCE_OCPUS }}
+          MEMORY: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
         run: |
-          python main.py || python run.py
+          go run main.go
