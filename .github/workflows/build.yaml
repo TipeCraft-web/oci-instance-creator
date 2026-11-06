@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, main ]
   schedule:
-    - cron: '*/30 * * * *' # Läuft alle 30 Minuten automatisch
+    - cron: '*/30 * * * *' # Läuft alle 30 Minuten automatisch im Hintergrund
   workflow_dispatch: # Aktiviert den manuellen Start-Button
 
 jobs:
@@ -36,4 +36,4 @@ jobs:
           CPUS: ${{ secrets.INSTANCE_OCPUS }}
           MEMORY: ${{ secrets.INSTANCE_MEMORY_IN_GBS }}
         run: |
-          go run main.go
+          go run .
