@@ -28,6 +28,7 @@ jobs:
         env:
           OCI_USER_ID: ${{ secrets.OCI_USER_ID }}
           OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
+          OCI_COMPARTMENT_ID: ${{ secrets.OCI_TENANCY_ID }} # <-- DIESE ZEILE HINZUFÜGEN
           OCI_SUBNET_ID: ${{ secrets.OCI_SUBNET_ID }}
           OCI_IMAGE_ID: ${{ secrets.OCI_IMAGE_ID }}
           OCI_REGION: ${{ secrets.OCI_REGION }}
